@@ -1,1 +1,0 @@
-export { DivScreen } from "./DivScreen";
