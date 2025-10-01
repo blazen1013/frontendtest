@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useTheme from "../../theme/useTheme";
 import "./style.css";
+import PersonalInfoModal from "../Setting/PersonalInfoModal";
 
 // 간단 모달 컴포넌트 (더블클릭 핸들러 onDouble 추가)
 function Modal({ open, title, onClose, onDouble, children }) {
@@ -37,6 +38,7 @@ export const Screen = () => {
   const [workOpen, setWorkOpen] = useState(true);
   const { theme, toggle } = useTheme();
   const nav = useNavigate();
+  const [openSettings, setOpenSettings] = useState(false);
 
   // 모달 타입 → 임시 라우트 매핑
   const modalToPath = {
@@ -320,8 +322,8 @@ export const Screen = () => {
         <div
           className="nav-item settings-item"
           role="button" tabIndex={0}
-          onClick={() => nav("/settings")}
-          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && nav("/settings")}
+          onClick={() => setOpenSettings(true)}                           // ← 모달 열기
+          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setOpenSettings(true)}
         >
           <div className="rectangle-4" />
           <div className="text-wrapper">설정</div>
@@ -339,6 +341,16 @@ export const Screen = () => {
           <div className="frame" />
         </div>
       </div>
+      {/* ===== 개인정보 수정 팝업 (드래그 가능) ===== */}
+      <PersonalInfoModal
+        open={openSettings}
+        initial={{ status: "WORKING", name: "홍길동", email: "test@example.com" }}
+        onClose={() => setOpenSettings(false)}
+        onSave={(payload) => {
+          console.log("settings save:", payload); // TODO: 백엔드 연동
+          setOpenSettings(false);
+        }}
+      />
     </div>
   );
 };
